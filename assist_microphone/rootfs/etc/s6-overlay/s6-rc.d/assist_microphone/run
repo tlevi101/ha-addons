@@ -5,12 +5,25 @@
 # Start service
 # ==============================================================================
 extra_args=()
+
 if bashio::config.true 'debug_logging'; then
     extra_args+=('--debug')
 fi
 
 if bashio::config.true 'sound_enabled'; then
     extra_args+=('--snd-command' 'aplay -r 16000 -c 1 -f S16_LE -t raw')
+fi
+
+if bashio::config.true 'vad_enabled'; then
+    extra_args+=('--vad')
+    extra_args+=('--vad-threshold' "$(bashio::config 'vad_threshold')")
+    extra_args+=('--vad-trigger-level' "$(bashio::config 'vad_trigger_level')")
+    extra_args+=('--vad-buffer-seconds' "$(bashio::config 'vad_buffer_seconds')")
+    extra_args+=('--vad-wake-word-timeout' "$(bashio::config 'vad_wake_word_timeout')")
+fi
+
+if bashio::config.has_value 'satellite_area'; then
+    extra_args+=('--area' "$(bashio::config 'satellite_area')")
 fi
 
 exec python3 -m wyoming_satellite \
@@ -26,4 +39,8 @@ exec python3 -m wyoming_satellite \
     --snd-volume-multiplier "$(bashio::config 'sound_volume_multiplier')" \
     --mic-auto-gain "$(bashio::config 'auto_gain')" \
     --mic-noise-suppression "$(bashio::config 'noise_suppression')" \
+    --mic-command-samples-per-chunk "$(bashio::config 'mic_samples_per_chunk')" \
+    --mic-seconds-to-mute-after-awake-wav "$(bashio::config 'mic_seconds_to_mute_after_awake_wav')" \
+    --mic-channel-index "$(bashio::config 'mic_channel_index')" \
+    --wake-refractory-seconds "$(bashio::config 'wake_refractory_seconds')" \
     --no-zeroconf "${extra_args[@]}"
