@@ -1,9 +1,9 @@
 ---
-version: 1.3.0
+version: "1.3.1"
 slug: assist_microphone
 name: Assist Microphone
 description: Use Assist with local microphone
-url: https://github.com/home-assistant/addons/blob/master/assist_microphone
+url: https://github.com/tlevi101/ha-addons/blob/master/assist_microphone
 hassio_api: true
 arch:
   - amd64
@@ -25,16 +25,10 @@ options:
   mic_volume_multiplier: 1.0
   sound_volume_multiplier: 1.0
   debug_logging: false
-  vad_enabled: true
-  vad_threshold: 0.5
-  vad_trigger_level: 1
-  vad_buffer_seconds: 2.0
-  vad_wake_word_timeout: 5.0
   mic_samples_per_chunk: 512
-  mic_seconds_to_mute_after_awake_wav: 0.5
+  mic_seconds_to_mute_after_awake_wav: 0.0
   mic_channel_index: 0
   wake_refractory_seconds: 5.0
-  satellite_area: ""
 schema:
   awake_wav: str
   done_wav: str
@@ -47,11 +41,6 @@ schema:
   mic_volume_multiplier: float
   sound_volume_multiplier: float
   debug_logging: bool
-  vad_enabled: bool
-  vad_threshold: float
-  vad_trigger_level: int
-  vad_buffer_seconds: float
-  vad_wake_word_timeout: float
   mic_samples_per_chunk: int
   mic_seconds_to_mute_after_awake_wav: float
   mic_channel_index: int

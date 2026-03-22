@@ -14,16 +14,14 @@ if bashio::config.true 'sound_enabled'; then
     extra_args+=('--snd-command' 'aplay -r 16000 -c 1 -f S16_LE -t raw')
 fi
 
-if bashio::config.true 'vad_enabled'; then
-    extra_args+=('--vad')
-    extra_args+=('--vad-threshold' "$(bashio::config 'vad_threshold')")
-    extra_args+=('--vad-trigger-level' "$(bashio::config 'vad_trigger_level')")
-    extra_args+=('--vad-buffer-seconds' "$(bashio::config 'vad_buffer_seconds')")
-    extra_args+=('--vad-wake-word-timeout' "$(bashio::config 'vad_wake_word_timeout')")
-fi
-
 if bashio::config.has_value 'satellite_area'; then
     extra_args+=('--area' "$(bashio::config 'satellite_area')")
+fi
+
+timer_repeat_count="$(bashio::config 'timer_repeat_count')"
+timer_repeat_delay="$(bashio::config 'timer_repeat_delay')"
+if [ -n "${timer_repeat_count}" ] && [ -n "${timer_repeat_delay}" ]; then
+    extra_args+=('--timer-finished-wav-repeat' "${timer_repeat_count}" "${timer_repeat_delay}")
 fi
 
 exec python3 -m wyoming_satellite \
@@ -34,7 +32,6 @@ exec python3 -m wyoming_satellite \
     --awake-wav "$(bashio::config 'awake_wav')" \
     --done-wav "$(bashio::config 'done_wav')" \
     --timer-finished-wav "$(bashio::config 'timer_finished_wav')" \
-    --timer-finished-wav-repeat "$(bashio::config 'timer_repeat_count')" "$(bashio::config 'timer_repeat_delay')" \
     --mic-volume-multiplier "$(bashio::config 'mic_volume_multiplier')" \
     --snd-volume-multiplier "$(bashio::config 'sound_volume_multiplier')" \
     --mic-auto-gain "$(bashio::config 'auto_gain')" \
